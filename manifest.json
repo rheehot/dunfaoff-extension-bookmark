@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "dunfaoff-bookmark",
+  "description": "extension for dunfaoff bookmark",
+  "version": "0.0.1",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["https://dunfaoff.com/SearchResult.df*"],
+      "all_frames": true,
+      "js": ["./src/content.js"]
+    }
+  ]
+}
