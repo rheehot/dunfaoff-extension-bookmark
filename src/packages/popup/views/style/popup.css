@@ -1,0 +1,38 @@
+html,
+body {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans KR',
+    sans-serif;
+}
+
+.popup {
+  width: 400px;
+  padding: 1px 10px;
+  overflow-wrap: break-word;
+}
+
+.popup .title {
+}
+
+/* div */
+.popup .bookmark-list {
+  margin: 1rem 0;
+}
+
+/* div title */
+.popup .bookmark-list .bookmark-title {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+/* div ul */
+.popup .bookmark-list .bookmark-list-wrapper {
+  padding: 0;
+  list-style: none;
+}
+
+/* div ul li */
+.popup .bookmark-list .bookmark-list-wrapper .bookmark-list-item {
+  display: block;
+}

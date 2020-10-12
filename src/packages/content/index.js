@@ -1,52 +1,78 @@
-const BookMark = (function (d, w) {
-  let characterID
-  let server
-  let element
+/**
+ * @typedef {Object} BookMark
+ * @property {string} characterID
+ * @property {string} server
+ * @property {HTMLElement} element
+ * @property {HTMLElement} buttonElement
+ * @property {boolean} isStored
+ */
 
-  function getCurrentQueryParams() {
-    const query = w.location.search.replace('?', '')
+/**
+ * @returns {BookMark}
+ */
+function BookMark() {
+  const query = window.location.search.replace('?', '')
 
-    query.split('&').forEach((param) => {
-      const [key, value] = param.split('=')
+  query.split('&').forEach((param) => {
+    const [key, value] = param.split('=')
 
-      if (key === 'server') {
-        server = value
-      } else {
-        characterID = value
+    if (key === 'server') {
+      this.server = value
+    } else {
+      this.characterID = value
+    }
+  })
+
+  chrome.storage.sync.get([this.characterID], (result) => {
+    if (!result[this.characterID]) {
+      this.isStored = false
+    } else {
+      this.isStored = true
+    }
+    updateButtonElement()
+  })
+
+  const updateButtonElement = () => {
+    this.buttonElement.innerText = this.isStored
+      ? '즐겨찾기에 추가 됨'
+      : '즐겨찾기 추가'
+  }
+
+  const targetClassName = 'df-bookmark-container'
+  const buttonClassName = 'df-bookmark-button'
+  const targetElement = document.createElement('div')
+  const buttonElement = document.createElement('button')
+
+  targetElement.dataset.characterId = this.characterID
+  targetElement.classList.add(targetClassName)
+  buttonElement.classList.add(buttonClassName)
+
+  this.element = targetElement
+  this.buttonElement = buttonElement
+
+  this.element.appendChild(this.buttonElement)
+  document.body.appendChild(this.element)
+
+  this.buttonElement.onclick = (event) => {
+    if (this.isStored) {
+      // 이미 추가 된 경우
+      return
+    } else {
+      // 추가
+      const character = {
+        [this.characterID]: {
+          id: this.characterID,
+          server: this.server,
+          date: Date.now()
+        }
       }
-    })
+      chrome.storage.sync.set(character, () => {
+        updateButtonElement()
+      })
+    }
   }
+}
 
-  function insertElement() {
-    const targetClassName = 'df-bookmark-container'
-    const buttonClassName = 'df-bookmark-button'
-    const targetElement = d.createElement('div')
-    const buttonElement = d.createElement('button')
+const bookMark = new BookMark()
 
-    targetElement.dataset.characterId = characterID
-    targetElement.classList.add(targetClassName)
-
-    buttonElement.innerText = '즐겨찾기 추가'
-    buttonElement.classList.add(buttonClassName)
-
-    element = targetElement
-
-    element.appendChild(buttonElement)
-    d.body.appendChild(element)
-  }
-
-  function run() {
-    getCurrentQueryParams()
-    insertElement()
-  }
-
-  run()
-
-  return {
-    characterID,
-    server,
-    element
-  }
-})(document, window)
-
-console.log(BookMark)
+console.log(bookMark)
