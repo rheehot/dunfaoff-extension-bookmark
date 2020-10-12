@@ -14,9 +14,11 @@
       ],
       "all_frames": true,
       "js": [
+        "./src/packages/content/js/toastify.min.js",
         "./src/packages/content/index.js"
       ],
       "css": [
+        "./src/packages/content/style/toastify.min.css",
         "./src/packages/content/style/index.css"
       ]
     }
