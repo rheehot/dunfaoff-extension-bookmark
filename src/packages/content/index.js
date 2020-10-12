@@ -1,6 +1,9 @@
 /**
  * @typedef {Object} BookMark
  * @property {string} characterID
+ * @property {string} characterName
+ * @property {number} level
+ * @property {string} job
  * @property {string} server
  * @property {HTMLElement} element
  * @property {HTMLElement} buttonElement
@@ -61,9 +64,10 @@ function BookMark() {
       // 추가
       const character = {
         [this.characterID]: {
+          // TODO
           id: this.characterID,
-          server: this.server,
-          date: Date.now()
+          date: Date.now(),
+          server: this.server
         }
       }
       chrome.storage.sync.set(character, () => {
