@@ -1,3 +1,22 @@
+;(function () {
+  const s = document.createElement('script')
+  const f = document.createElement('script')
+
+  s.src = 'https://use.fontawesome.com/releases/v5.15.1/js/solid.js'
+  f.src = 'https://use.fontawesome.com/releases/v5.15.1/js/fontawesome.js'
+  s.defer = true
+  f.defer = true
+  s.integrity =
+    'sha384-oKbh94nlFq571cjny1jaIBlQwzTJW4KYExGYjslYSoG/J/w68zUI+KHPRveXB6EY'
+  f.integrity =
+    'sha384-v0OPwyxrMWxEgAVlmUqvjeEr48Eh/SOZ2DRtVYJCx1ZNDfWBfNMWUjwUwBCJgfO4'
+  s.crossOrigin = 'anonymous'
+  f.crossOrigin = 'anonymous'
+
+  document.body.appendChild(s)
+  document.body.appendChild(f)
+})()
+
 /**
  * @typedef {Object} BookMark
  * @property {string} characterID
@@ -36,9 +55,11 @@ function BookMark() {
   })
 
   const updateButtonElement = () => {
-    this.buttonElement.innerText = this.isStored
-      ? '즐겨찾기에 추가 됨'
-      : '즐겨찾기 추가'
+    const starIcon = `<i class="fas fa-star${
+      this.isStored ? ' stored' : ''
+    }"></i>${this.isStored ? '즐겨찾기에 추가 됨' : '즐겨찾기에 추가'}`
+
+    this.buttonElement.innerHTML = starIcon
   }
 
   const targetClassName = 'df-bookmark-container'
