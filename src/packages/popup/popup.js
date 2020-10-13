@@ -21,6 +21,7 @@ chrome.storage.sync.get(['bookmark'], ({ bookmark }) => {
 chrome.storage.sync.get(['recent'], ({ recent }) => {
   recent.items.forEach((item) => {
     // Recent Template
+    console.log(item)
   })
 })
 
