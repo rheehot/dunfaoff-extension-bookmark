@@ -77,7 +77,7 @@ function BookMark() {
 
   // 아이디, 레벨, 직업 가져오기
   this.characterName = document.querySelector(
-    `div[data-id=${this.characterID}]`
+    `div[data-id="${this.characterID}"]`
   ).innerText
 
   const [level, job] = document
@@ -88,12 +88,21 @@ function BookMark() {
   this.level = level.replace('Lv.', '')
   this.job = job
 
-  this.buttonElement.onclick = (event) => {
+  this.buttonElement.onclick = (_event) => {
     if (this.isStored) {
       // 이미 추가 된 경우 삭제
       function deleteContent(id) {
-        return new Promise((resolve, reject) => {
-          chrome.storage.sync.remove(id, () => resolve())
+        return new Promise((resolve, _) => {
+          chrome.storage.sync.get(['bookmark'], ({ bookmark }) => {
+            const targetIndex = bookmark.items.findIndex(
+              (item) => item.id === id
+            )
+            bookmark.items.splice(targetIndex, 1)
+            chrome.storage.sync.set(
+              { bookmark: { items: [...bookmark.items] } },
+              () => resolve()
+            )
+          })
         })
       }
 
@@ -106,28 +115,37 @@ function BookMark() {
     } else {
       // 추가
       const character = {
-        [this.characterID]: {
-          date: Date.now(),
-          id: this.characterID,
-          job: this.job,
-          level: this.level,
-          name: this.characterName,
-          server: this.server
-        }
+        date: Date.now(),
+        id: this.characterID,
+        job: this.job,
+        level: this.level,
+        name: this.characterName,
+        server: this.server
       }
-      chrome.storage.sync.set(character, () => {
-        utils.showToast({ text: '즐겨찾기에 추가 완료' })
-        updateButtonElement()
+      chrome.storage.sync.get(['bookmark'], ({ bookmark }) => {
+        bookmark.items.push(character)
+
+        chrome.storage.sync.set(
+          { bookmark: { items: [...bookmark.items] } },
+          () => {
+            utils.showToast({ text: '즐겨찾기에 추가 완료' })
+            updateButtonElement()
+          }
+        )
       })
     }
   }
 
   const updateButtonElement = () => {
-    chrome.storage.sync.get([this.characterID], (result) => {
-      if (utils.isEmpty(result)) {
+    chrome.storage.sync.get(['bookmark'], ({ bookmark }) => {
+      if (!bookmark || !bookmark.items.length) {
         this.isStored = false
-      } else {
+      } else if (
+        bookmark.items.filter((item) => item.id === this.characterID).length
+      ) {
         this.isStored = true
+      } else {
+        this.isStored = false
       }
 
       const starIcon = `<i class="fas fa-star${

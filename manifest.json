@@ -7,6 +7,12 @@
     "activeTab",
     "storage"
   ],
+  "background": {
+    "scripts": [
+      "src/packages/background/index.js"
+    ],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": [
@@ -15,6 +21,7 @@
       "all_frames": true,
       "js": [
         "./src/packages/content/js/toastify.min.js",
+        "./src/packages/content/js/recent-visit.js",
         "./src/packages/content/index.js"
       ],
       "css": [
