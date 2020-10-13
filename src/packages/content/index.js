@@ -73,7 +73,7 @@ function BookMark() {
   document.body.appendChild(this.element)
 
   // 아이디, 레벨, 직업 가져오기
-  this.characterName = getCharacterName(this.characterID)
+  this.characterName = getCharacterName()
 
   const { job, level } = getLevelAndJob()
 

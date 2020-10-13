@@ -16,6 +16,14 @@ function getCharFromQuery() {
     }
   })
 
+  // 수집 실패
+  if (!server && !characterID) {
+    server = document
+      .querySelector('div#char_server')
+      .className.split('serverId-')[1]
+    characterID = document.querySelector('div#char_name').dataset.id
+  }
+
   return { server, characterID }
 }
 
@@ -23,8 +31,8 @@ function getCharFromQuery() {
  * @param {string} id
  * @returns {string}
  */
-function getCharacterName(id) {
-  const nameElement = document.querySelector(`div[data-id="${id}"]`).innerText
+function getCharacterName() {
+  const nameElement = document.querySelector(`div#char_name`).innerText
 
   return nameElement
 }

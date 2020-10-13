@@ -7,20 +7,7 @@ if (onError !== null) {
 const MAX_RECENT_LENGTH = 20
 
 chrome.storage.sync.get(['recent'], ({ recent }) => {
-  const query = window.location.search.replace('?', '')
-
-  let server, characterID
-
-  query.split('&').forEach((param) => {
-    const [key, value] = param.split('=')
-
-    if (key === 'server') {
-      server = value
-    } else {
-      characterID = value
-    }
-  })
-
+  const { server, characterID } = getCharFromQuery()
   const found = recent.items.find((item) => item.id === characterID)
 
   if (found === undefined) {
@@ -28,16 +15,8 @@ chrome.storage.sync.get(['recent'], ({ recent }) => {
       recent.items.splice(recent.items.length - 1, 1)
     }
 
-    const name = document.querySelector(`div[data-id="${characterID}"]`)
-      .innerText
-
-    let [level, job] = document
-      .querySelector('div#char_info')
-      .innerText.split('|')
-      .map((s) => s.trim())
-
-    level = level.replace('Lv.', '')
-    job = job
+    const name = getCharacterName()
+    const { job, level } = getLevelAndJob()
 
     recent.items.unshift({
       date: Date.now(),
