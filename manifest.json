@@ -5,7 +5,8 @@
   "version": "0.0.1",
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "*://dunfaoff.com/*"
   ],
   "background": {
     "scripts": [
@@ -20,6 +21,7 @@
       ],
       "all_frames": true,
       "js": [
+        "./src/packages/content/js/common.js",
         "./src/packages/content/js/toastify.min.js",
         "./src/packages/content/js/recent-visit.js",
         "./src/packages/content/index.js"

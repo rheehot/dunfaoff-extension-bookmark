@@ -1,3 +1,7 @@
+if (onError !== null) {
+  throw ''
+}
+
 ;(function () {
   const s = document.createElement('script')
   const f = document.createElement('script')
@@ -48,17 +52,10 @@ const utils = {
  * @returns {BookMark}
  */
 function BookMark() {
-  const query = window.location.search.replace('?', '')
+  const { server, characterID } = getCharFromQuery()
 
-  query.split('&').forEach((param) => {
-    const [key, value] = param.split('=')
-
-    if (key === 'server') {
-      this.server = value
-    } else {
-      this.characterID = value
-    }
-  })
+  this.server = server
+  this.characterID = characterID
 
   const targetClassName = 'df-bookmark-container'
   const buttonClassName = 'df-bookmark-button'
@@ -76,16 +73,11 @@ function BookMark() {
   document.body.appendChild(this.element)
 
   // 아이디, 레벨, 직업 가져오기
-  this.characterName = document.querySelector(
-    `div[data-id="${this.characterID}"]`
-  ).innerText
+  this.characterName = getCharacterName(this.characterID)
 
-  const [level, job] = document
-    .querySelector('div#char_info')
-    .innerText.split('|')
-    .map((s) => s.trim())
+  const { job, level } = getLevelAndJob()
 
-  this.level = level.replace('Lv.', '')
+  this.level = level
   this.job = job
 
   this.buttonElement.onclick = (_event) => {

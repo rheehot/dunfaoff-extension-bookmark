@@ -1,3 +1,9 @@
+const onError = document.querySelector('.error-actions')
+
+if (onError !== null) {
+  throw ''
+}
+
 const MAX_RECENT_LENGTH = 20
 
 chrome.storage.sync.get(['recent'], ({ recent }) => {
