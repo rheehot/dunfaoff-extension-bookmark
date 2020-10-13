@@ -53,3 +53,10 @@ function getLevelAndJob() {
     job
   }
 }
+
+/**
+ * @returns {string}
+ */
+function getAdventureName() {
+  return document.querySelector('div#char_adventure').innerText.split(' ')[1]
+}

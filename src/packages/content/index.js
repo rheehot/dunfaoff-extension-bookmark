@@ -40,6 +40,7 @@ const utils = {
  * @typedef {Object} BookMark
  * @property {string} characterID
  * @property {string} characterName
+ * @property {string} adventureName
  * @property {number} level
  * @property {string} job
  * @property {string} server
@@ -72,8 +73,9 @@ function BookMark() {
   this.element.appendChild(this.buttonElement)
   document.body.appendChild(this.element)
 
-  // 아이디, 레벨, 직업 가져오기
+  // 아이디, 레벨, 직업, 모험단 가져오기
   this.characterName = getCharacterName()
+  this.adventureName = getAdventureName()
 
   const { job, level } = getLevelAndJob()
 
@@ -107,6 +109,7 @@ function BookMark() {
     } else {
       // 추가
       const character = {
+        adventure: this.adventureName,
         date: Date.now(),
         id: this.characterID,
         job: this.job,

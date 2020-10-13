@@ -2,17 +2,7 @@ chrome.storage.sync.get(['bookmark'], ({ bookmark }) => {
   bookmark.items.forEach((item) => {
     // Bookmark Template
     const parent = document.querySelector('.bookmark-list .list-wrapper')
-    const node = document.createElement('li')
-
-    node.classList.add('list-item')
-    node.innerHTML = `<a target="_blank" href="https://dunfaoff.com/SearchResult.df?server=${item.server}&characterid=${item.id}">
-      <span class="job">
-        ${item.job} |
-      </span>
-      <span class="name">
-        ${item.name}
-      </span>
-    </a>`
+    const node = createNode(item)
 
     insertItem(parent, node)
   })
@@ -21,7 +11,10 @@ chrome.storage.sync.get(['bookmark'], ({ bookmark }) => {
 chrome.storage.sync.get(['recent'], ({ recent }) => {
   recent.items.forEach((item) => {
     // Recent Template
-    console.log(item)
+    const parent = document.querySelector('.recent-list .list-wrapper')
+    const node = createNode(item)
+
+    insertItem(parent, node)
   })
 })
 
@@ -31,4 +24,32 @@ chrome.storage.sync.get(['recent'], ({ recent }) => {
  */
 function insertItem(parent, item) {
   parent.appendChild(item)
+}
+
+function createNode(
+  { id, server, job, name, adventure, level },
+  nodeType = 'li'
+) {
+  const node = document.createElement(nodeType)
+
+  node.classList.add('list-item')
+
+  node.innerHTML = `
+  <a target="_blank" href="https://dunfaoff.com/SearchResult.df?server=${server}&characterid=${id}">
+    <span class="job">
+      ${job}
+    </span>
+    <span class="name">
+      ${name}
+    </span>
+    <span class="adventure">
+      ${adventure}
+    </span>
+    <span class="level">
+      레벨 ${level}
+    </span>
+  </a>
+  `
+
+  return node
 }

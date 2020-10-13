@@ -14,21 +14,26 @@ chrome.storage.sync.get(['recent'], ({ recent }) => {
     if (recent.items.length >= MAX_RECENT_LENGTH) {
       recent.items.splice(recent.items.length - 1, 1)
     }
-
-    const name = getCharacterName()
-    const { job, level } = getLevelAndJob()
-
-    recent.items.unshift({
-      date: Date.now(),
-      id: characterID,
-      job,
-      level,
-      name,
-      server
-    })
-
-    return chrome.storage.sync.set({ recent: { items: [...recent.items] } })
   } else {
-    return
+    const overlayIndex = recent.items.findIndex(
+      (item) => item.id === characterID
+    )
+    recent.items.splice(overlayIndex, 1)
   }
+
+  const name = getCharacterName()
+  const { job, level } = getLevelAndJob()
+  const adventureName = getAdventureName()
+
+  recent.items.unshift({
+    adventure: adventureName,
+    date: Date.now(),
+    id: characterID,
+    job,
+    level,
+    name,
+    server
+  })
+
+  return chrome.storage.sync.set({ recent: { items: [...recent.items] } })
 })

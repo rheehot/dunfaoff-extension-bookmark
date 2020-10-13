@@ -49,7 +49,24 @@ body {
 }
 
 /* div ul li a */
+.popup .bookmark-list ul li a:hover,
+.recent-list ul li a:hover {
+  text-decoration: underline;
+}
+
+/* div ul li a */
 .popup .bookmark-list ul li a:visited,
 .recent-list ul li a:visited {
   color: inherit;
+}
+
+.list-item .job {
+  color: #0F52BA;
+  font-weight: bold;
+}
+
+.list-item span:not(:last-child)::after {
+  content: '|';
+  display: inline-block;
+  margin: 0 2.5px;
 }
