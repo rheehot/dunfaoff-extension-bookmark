@@ -29,6 +29,18 @@
         "./packages/content/style/toastify.min.css",
         "./packages/content/style/index.css"
       ]
+    },
+    {
+      "matches": [
+        "https://dunfaoff.com/*"
+      ],
+      "all_frames": true,
+      "js": [
+        "./packages/content/js/extend.js"
+      ],
+      "css": [
+        "./packages/content/style/extend.css"
+      ]
     }
   ],
   "browser_action": {
