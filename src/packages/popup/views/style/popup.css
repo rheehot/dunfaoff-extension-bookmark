@@ -4,8 +4,7 @@ html,
 body {
   font-size: 16px;
   font-weight: 400;
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans', 'Noto Sans KR',
-    sans-serif;
+  font-family: -system-ui, -apple-system, BlinkMacSystemFont sans-serif;
 }
 
 .popup {
@@ -18,6 +17,7 @@ body {
 .popup .bookmark-list,
 .recent-list {
   margin: 1rem 0;
+  padding: 0 0.5rem;
 }
 
 /* div title */
@@ -61,7 +61,7 @@ body {
 }
 
 .list-item .job {
-  color: #0F52BA;
+  color: #0f52ba;
   font-weight: bold;
 }
 
