@@ -7,10 +7,34 @@ function main() {
   }
 
   /** @returns {object[] | null} */
-  function getBookmark() {}
+  function getBookmark() {
+    chrome.storage.sync.get(['bookmark'], ({ bookmark }) => {
+      return !bookmark.items.length ? null : bookmark.items
+    })
+  }
 
   /** @returns {object[] | null} */
-  function getRecentVisited() {}
+  function getRecentVisited() {
+    chrome.storage.sync.get(['recent'], ({ recent }) => {
+      return !recent.items.length ? null : recent.items
+    })
+  }
+
+  /**
+   * @param {HTMLElement} parent
+   * @param {HTMLElement | NodeList | Array} node
+   */
+  function appendFromParent(parent, node) {
+    if (!(parent instanceof HTMLElement)) {
+      throw new Error('Not HTMLElement Type Parent')
+    } else if (node instanceof HTMLElement) {
+      parent.appendChild(node)
+    } else if (node instanceof NodeList || node.length) {
+      parent.append(...node)
+    } else {
+      throw new Error('자식 Node의 타입 불분명')
+    }
+  }
 
   function ce(nodeType = 'div') {
     return document.createElement(nodeType)
@@ -35,9 +59,8 @@ function main() {
   tab1.textContent = '최근검색'
   tab2.textContent = '즐겨찾기'
 
-  tabContainer.append(tab1, tab2)
-
-  extendNode.appendChild(tabContainer)
+  appendFromParent(tabContainer, [tab1, tab2])
+  appendFromParent(extendNode, tabContainer)
 
   // test
   const ul = document.createElement('ul')
@@ -50,17 +73,17 @@ function main() {
     <i class="fas fa-times fa-sm" style="color: rgba(0, 0, 0, 0.1);"></i>
     </span>`
 
-    ul.appendChild(li)
+    appendFromParent(ul, li)
   }
 
-  extendNode.appendChild(ul)
+  appendFromParent(extendNode, ul)
 
   inputNode.autocomplete = 'off'
   inputNode.onclick = function () {
     extendNode.dataset.active = true
   }
 
-  inputWrapNode.appendChild(extendNode)
+  appendFromParent(inputWrapNode, extendNode)
 }
 
 main()
