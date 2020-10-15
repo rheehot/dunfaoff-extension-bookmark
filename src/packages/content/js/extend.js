@@ -6,6 +6,12 @@ function main() {
     return
   }
 
+  /** @returns {object[] | null} */
+  function getBookmark() {}
+
+  /** @returns {object[] | null} */
+  function getRecentVisited() {}
+
   function ce(nodeType = 'div') {
     return document.createElement(nodeType)
   }
