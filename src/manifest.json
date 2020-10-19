@@ -36,6 +36,7 @@
       ],
       "all_frames": true,
       "js": [
+        "./packages/content/js/fuse.min.js",
         "./packages/content/js/extend.js"
       ],
       "css": [

@@ -8,17 +8,40 @@ function main() {
 
   /** @returns {object[] | null} */
   function getBookmark() {
-    chrome.storage.sync.get(['bookmark'], ({ bookmark }) => {
-      return !bookmark.items.length ? null : bookmark.items
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.get(['bookmark'], ({ bookmark }) => {
+        resolve(!bookmark.items.length ? null : bookmark.items)
+      })
     })
   }
 
-  /** @returns {object[] | null} */
+  /** @returns {Promise<object> | null} */
   function getRecentVisited() {
-    chrome.storage.sync.get(['recent'], ({ recent }) => {
-      return !recent.items.length ? null : recent.items
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.get(['recent'], ({ recent }) => {
+        resolve(!recent.items.length ? null : recent.items)
+      })
     })
   }
+
+  const tasks = Promise.all([getBookmark(), getRecentVisited()])
+
+  tasks.then((result) => {
+    console.log(result[0], result[1])
+  })
+
+  // getRecentVisited().then((items) => {
+  //   if (items && items.length) {
+  //     const fuse = new Fuse(items, {
+  //       includeScore: true,
+  //       keys: ['name', 'adventure']
+  //     })
+
+  //     const result = fuse.search('던린')
+
+  //     console.log(result, items)
+  //   }
+  // })
 
   /**
    * @param {HTMLElement} parent
