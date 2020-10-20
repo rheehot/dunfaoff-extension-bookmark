@@ -37,16 +37,7 @@ const utils = {
 }
 
 /**
- * @typedef {Object} BookMark
- * @property {string} characterID
- * @property {string} characterName
- * @property {string} adventureName
- * @property {number} level
- * @property {string} job
- * @property {string} server
- * @property {HTMLElement} element
- * @property {HTMLElement} buttonElement
- * @property {boolean} isStored
+ * @typedef {import('./js/item').RuntimeCharacter} BookMark
  */
 
 /**

@@ -15,6 +15,7 @@
 .extend-container ul {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   padding: 1rem;
   list-style: none;
   background: white;
@@ -24,28 +25,35 @@
 }
 
 .extend-container ul li {
-  flex: 0 0 25%;
+  flex: 0 0 30%;
   text-align: left;
   font-size: 14px;
-  margin: 0.5rem 1rem;
+  margin: 0.5rem 5px;
 }
 
-.extend-container ul li span {
+.extend-container ul li span.name {
+  padding: 0 0.5rem;
+  font-weight: bold;
+}
+
+.extend-container ul li span.icon {
   float: right;
 }
 
 .extend-container .tab-container {
   display: flex;
   background: white;
+  border: 1px solid #eee;
 }
 
 .extend-container .tab-container .tab-item {
   flex: 0 0 50%;
-  border: 1px solid #eee;
   padding: 1rem 0;
+  text-align: center;
+  cursor: pointer;
 }
 
-.extend-container .tab-container .tab-item:last-child {
-  background: #ddd;
-  color: rgba(0, 0, 0, 0.75);
+.extend-container .tab-container .tab-item.deactive {
+  background: #ccc;
+  color: rgba(0, 0, 0, 0.65);
 }

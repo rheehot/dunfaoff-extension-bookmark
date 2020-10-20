@@ -1,3 +1,4 @@
 src/packages/content/style/toastify.min.css
 src/packages/content/js/toastify.min.js
 src/packages/content/js/fuse.min.js
+src/packages/content/js/debounce.min.js

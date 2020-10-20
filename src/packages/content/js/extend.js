@@ -1,9 +1,58 @@
+;(function testImport(nextCallback) {
+  chrome.storage.sync.get(['recent'], ({ recent }) => {
+    if (!recent.items.length) {
+      chrome.storage.sync.set(
+        {
+          recent: {
+            items: [
+              {
+                adventure: 'reactnative',
+                date: 1603174785204,
+                id: '938e5013549c93b8e33cc817de9257ae',
+                job: '眞 크루세이더',
+                level: '100',
+                name: '던린이예용',
+                server: 'anton'
+              }
+            ]
+          }
+        },
+        () => nextCallback()
+      )
+    } else {
+      nextCallback()
+    }
+  })
+})(main)
+
 function main() {
   const inputWrapNode = document.querySelector('.input-group')
+  /** @type {HTMLInputElement} */
   const inputNode = document.querySelector('input.form-control')
 
   if (!inputWrapNode || !inputNode) {
     return
+  }
+
+  const util = {
+    /**
+     * @param {HTMLElement} parent
+     * @param {HTMLElement | NodeList | Array} node
+     */
+    appendFromParent(parent, node) {
+      if (!(parent instanceof HTMLElement)) {
+        throw new Error('Not HTMLElement Type Parent')
+      } else if (node instanceof HTMLElement) {
+        parent.appendChild(node)
+      } else if (node instanceof NodeList || node.length) {
+        parent.append(...node)
+      } else {
+        throw new Error('자식 Node의 타입 불분명')
+      }
+    },
+    ce(nodeType = 'div') {
+      return document.createElement(nodeType)
+    }
   }
 
   /** @returns {object[] | null} */
@@ -27,86 +76,69 @@ function main() {
   const tasks = Promise.all([getBookmark(), getRecentVisited()])
 
   tasks.then((result) => {
-    console.log(result[0], result[1])
-  })
+    const [bookmark, recent] = result
 
-  // getRecentVisited().then((items) => {
-  //   if (items && items.length) {
-  //     const fuse = new Fuse(items, {
-  //       includeScore: true,
-  //       keys: ['name', 'adventure']
-  //     })
+    console.log(bookmark, recent)
 
-  //     const result = fuse.search('던린')
+    // init extend search form
+    inputNode.autocomplete = 'off'
 
-  //     console.log(result, items)
-  //   }
-  // })
+    const extendContainer = util.ce('div')
 
-  /**
-   * @param {HTMLElement} parent
-   * @param {HTMLElement | NodeList | Array} node
-   */
-  function appendFromParent(parent, node) {
-    if (!(parent instanceof HTMLElement)) {
-      throw new Error('Not HTMLElement Type Parent')
-    } else if (node instanceof HTMLElement) {
-      parent.appendChild(node)
-    } else if (node instanceof NodeList || node.length) {
-      parent.append(...node)
-    } else {
-      throw new Error('자식 Node의 타입 불분명')
+    extendContainer.classList.add('extend-container')
+    extendContainer.dataset.active = false
+
+    util.appendFromParent(inputWrapNode, extendContainer)
+
+    inputNode.onclick = function () {
+      extendContainer.dataset.active = true
     }
-  }
 
-  function ce(nodeType = 'div') {
-    return document.createElement(nodeType)
-  }
+    // create two tab
+    const recentTab = util.ce('div')
+    const bookmarkTab = util.ce('div')
+    const tabContainer = util.ce('div')
 
-  const extendNode = document.createElement('div')
+    ;[recentTab, bookmarkTab].forEach((el) => el.classList.add('tab-item'))
+    bookmarkTab.classList.add('deactive')
+    tabContainer.classList.add('tab-container')
 
-  extendNode.classList.add('extend-container')
-  extendNode.dataset.active = false
+    recentTab.textContent = '최근검색'
+    bookmarkTab.textContent = '즐겨찾기'
 
-  // test tab
-  const tabContainer = ce('div')
+    // 최근검색 리스트
+    const recentItemContainer = util.ce('ul')
 
-  tabContainer.classList.add('tab-container')
+    if (recent === null) {
+      const noRecentItem = util.ce('div')
 
-  const tab1 = ce('div')
-  const tab2 = ce('div')
+      noRecentItem.textContent = '최근 기록이 없습니다.'
 
-  tab1.classList.add('tab-item')
-  tab2.classList.add('tab-item')
+      util.appendFromParent(recentItemContainer, noRecentItem)
+    } else {
+      recent.forEach((/** @type {import('./item').StoredCharacter} */ item) => {
+        const li = util.ce('li')
 
-  tab1.textContent = '최근검색'
-  tab2.textContent = '즐겨찾기'
+        li.innerHTML = `
+        <div class="item-wrap">
+          <span class="name">
+            ${item.name}
+          </span>
+          <span class="icon">
+            <i class="fas fa-star fa-sm" style="color: rgba(0, 0, 0, 0.2); margin-right: 0.2rem"></i>
+            <i class="fas fa-times fa-sm" style="color: rgba(0, 0, 0, 0.2);"></i>
+          </span>
+        </div>
+        `
 
-  appendFromParent(tabContainer, [tab1, tab2])
-  appendFromParent(extendNode, tabContainer)
+        util.appendFromParent(recentItemContainer, li)
+      })
+    }
 
-  // test
-  const ul = document.createElement('ul')
-
-  for (let i = 0; i < 9; i++) {
-    const li = document.createElement('li')
-
-    li.innerHTML = `캐릭터 ${i}<span>
-    <i class="fas fa-star fa-sm" style="color: rgba(0, 0, 0, 0.1); margin-right: 0.2rem"></i>
-    <i class="fas fa-times fa-sm" style="color: rgba(0, 0, 0, 0.1);"></i>
-    </span>`
-
-    appendFromParent(ul, li)
-  }
-
-  appendFromParent(extendNode, ul)
-
-  inputNode.autocomplete = 'off'
-  inputNode.onclick = function () {
-    extendNode.dataset.active = true
-  }
-
-  appendFromParent(inputWrapNode, extendNode)
+    util.appendFromParent(tabContainer, [recentTab, bookmarkTab])
+    util.appendFromParent(extendContainer, tabContainer)
+    util.appendFromParent(extendContainer, recentItemContainer)
+  })
 }
 
-main()
+// main()
