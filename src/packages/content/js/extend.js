@@ -78,7 +78,7 @@ function main() {
   tasks.then((result) => {
     const [bookmark, recent] = result
 
-    console.log(bookmark, recent)
+    // console.log(bookmark, recent)
 
     // init extend search form
     inputNode.autocomplete = 'off'
@@ -90,9 +90,17 @@ function main() {
 
     util.appendFromParent(inputWrapNode, extendContainer)
 
-    inputNode.onclick = function () {
+    inputNode.onclick = function (e) {
+      e.stopPropagation()
+
       extendContainer.dataset.active = true
     }
+
+    document.addEventListener('click', function (e) {
+      if (!extendContainer.contains(e.target)) {
+        extendContainer.dataset.active = false
+      }
+    })
 
     // create two tab
     const recentTab = util.ce('div')
@@ -106,8 +114,33 @@ function main() {
     recentTab.textContent = '최근검색'
     bookmarkTab.textContent = '즐겨찾기'
 
+    // 이벤트 연결(Tabs)
+    recentTab.onclick = function () {
+      if (recentTab.classList.contains('deactive')) {
+        recentTab.classList.remove('deactive')
+        bookmarkTab.classList.add('deactive')
+
+        recentItemContainer.style.display = 'flex'
+        bookmarkItemContainer.style.display = 'none'
+      } else {
+        return
+      }
+    }
+
+    bookmarkTab.onclick = function () {
+      if (bookmarkTab.classList.contains('deactive')) {
+        bookmarkTab.classList.remove('deactive')
+        recentTab.classList.add('deactive')
+
+        bookmarkItemContainer.style.display = 'flex'
+        recentItemContainer.style.display = 'none'
+      }
+    }
+
     // 최근검색 리스트
     const recentItemContainer = util.ce('ul')
+
+    recentItemContainer.classList.add('recent-ul')
 
     if (recent === null) {
       const noRecentItem = util.ce('div')
@@ -135,9 +168,48 @@ function main() {
       })
     }
 
+    // 즐겨찾기 리스트
+    const bookmarkItemContainer = util.ce('ul')
+
+    bookmarkItemContainer.classList.add('bookmark-ul')
+    bookmarkItemContainer.style.display = 'none'
+
+    if (bookmark === null) {
+      const noBookmarkItem = util.ce('div')
+
+      noBookmarkItem.textContent = '즐겨찾기에 추가된 캐릭터가 없습니다.'
+
+      util.appendFromParent(bookmarkItemContainer, noBookmarkItem)
+    } else {
+      bookmark.forEach((
+        /** @type {import('./item').StoredCharacter} */ item
+      ) => {
+        const li = util.ce('li')
+
+        li.innerHTML = `
+        <div class="item-wrap">
+          <span class="name">
+            ${item.name}
+          </span>
+          <span class="job">
+            ${item.job}
+          </span>
+          <span class="icon">
+            <i class="fas fa-times fa-sm" style="color: rgba(0, 0, 0, 0.2);"></i>
+          </span>
+        </div>
+        `
+
+        util.appendFromParent(bookmarkItemContainer, li)
+      })
+    }
+
     util.appendFromParent(tabContainer, [recentTab, bookmarkTab])
     util.appendFromParent(extendContainer, tabContainer)
-    util.appendFromParent(extendContainer, recentItemContainer)
+    util.appendFromParent(extendContainer, [
+      recentItemContainer,
+      bookmarkItemContainer
+    ])
   })
 }
 

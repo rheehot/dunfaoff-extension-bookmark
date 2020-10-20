@@ -24,11 +24,16 @@
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.extend-container ul li {
+.extend-container ul.recent-ul li,
+.extend-container ul.bookmark-ul li {
   flex: 0 0 30%;
   text-align: left;
   font-size: 14px;
   margin: 0.5rem 5px;
+}
+
+.extend-container ul.bookmark-ul li {
+  flex: 0 0 50%;
 }
 
 .extend-container ul li span.name {
@@ -38,6 +43,11 @@
 
 .extend-container ul li span.icon {
   float: right;
+}
+
+.extend-container ul.bookmark-ul li span.icon {
+  float: none;
+  transform: translateY(50%);
 }
 
 .extend-container .tab-container {
